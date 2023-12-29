@@ -1,0 +1,91 @@
+= simple_form_for @rc_transfer_schedule, :html => {:class=>'form-horizontal', :autocomplete=>"off", :id => "rc_transfer_schedule_form"} do |f|
+  .control-group
+    = f.label ' '
+    #msg-error
+      = error_message_for(@rc_transfer_schedule, :base, :prepend_text => "")
+  .form-main{:style=>"width: 100%;"}
+    = f.hidden_field :lock_version
+    = f.hidden_field :approved_id
+    = f.hidden_field :approved_version
+    .control-group
+      = f.label :is_enabled, "Enabled?", :class => 'control-label'
+      - if f.object.is_enabled.nil?
+        = f.check_box :is_enabled, {:checked => "checked"},"Y","N"
+      - else 
+        = f.check_box :is_enabled, {},"Y","N"
+      #msg-error
+        = error_message_for(@sm_bank, :is_enabled, :prepend_text => "")
+    .control-group
+      = f.label :code, "*Code", :class => 'control-label'
+      = f.text_field :code, :maxlength => 20, :required => true
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :code, :prepend_text => "")
+    .control-group
+      = f.label :interval_in_mins, "*Schedule Interval", :class => 'control-label'
+      = f.number_field :interval_in_mins
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :interval_in_mins, :prepend_text => "")
+      = f.select :interval_unit, options_for_select(RcTransferSchedule::INTERVAL_UNITS, @rc_transfer_schedule.interval_unit)
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :interval_unit, :prepend_text => "")
+    .control-group
+      = f.label :next_run_at, "Next Run At", :class => 'control-label'
+      = f.text_field :next_run_at, :value => f.object.next_run_at_value
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :next_run_at, :prepend_text => "")
+    .control-group
+      = f.label :txn_kind, "*Transaction Kind", :class => 'control-label'
+      = f.select :txn_kind, options_for_select(RcTransferSchedule::TXN_KINDS, @rc_transfer_schedule.txn_kind)
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :txn_kind, :prepend_text => "")
+    .control-group
+      = f.label :debit_account_no, "*Debit Account No", :class => 'control-label'
+      = f.text_field :debit_account_no, :minlength => 15, :maxlength => 20, :required => true
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :debit_account_no, :prepend_text => "")
+    .control-group
+      = f.label :bene_account_no, "Beneficiary Account No", :class => 'control-label'
+      = f.text_field :bene_account_no, :maxlength => 20, :minlength => 1
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :bene_account_no, :prepend_text => "")
+    .control-group
+      = f.label :bene_account_ifsc, "Beneficiary IFSC", :class => 'control-label'
+      = f.text_field :bene_account_ifsc
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :bene_account_ifsc, :prepend_text => "")
+    .control-group
+      = f.label :bene_name, "Beneficiary Name", :class => 'control-label'
+      = f.text_field :bene_name, :maxlength => 25
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :bene_name, :prepend_text => "")
+    .control-group
+      = f.label :acct_threshold_amt, "Account Threshold Amount", :class => 'control-label'
+      = f.number_field :acct_threshold_amt, step: "0.01"
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :acct_threshold_amt, :prepend_text => "")
+    .control-group
+      = f.label :rc_app_id, "RC App", :class => 'control-label'
+      = f.select :rc_app_id, RcApp.all.map {|u| [u.app_id, u.id]}, :include_blank => 'Select'
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :rc_app_id, :prepend_text => "")
+    .control-group
+      = f.label :max_retries, "*Max. No. of Retries", :class => 'control-label'
+      = f.number_field :max_retries
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :max_retries, :prepend_text => "")
+    .control-group
+      = f.label :retry_in_mins, "*Retry Interval(in mins)", :class => 'control-label'
+      = f.number_field :retry_in_mins
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :retry_in_mins, :prepend_text => "")
+    .control-group
+      = f.label :notify_mobile_no, "Notify Mobile No", :class => 'control-label'
+      = f.text_field :notify_mobile_no, :minlength => 10, :maxlength => 10, :required => true
+      #msg-error
+        = error_message_for(@rc_transfer_schedule, :notify_mobile_no, :prepend_text => "")
+    .udfs
+      = render :partial => 'udfs', locals: {udf: @rc_transfer_schedule}
+  .form-actions
+    - (f.object.new_record? and f.object.code.nil?) ? label_name = "Create" : label_name = "Update"
+    = f.button "submit" ,:class=>"btn btn-primary", :id => 'submit_customer', :value => label_name + ' Recurring Transfer Schedule'
+    = link_to :Cancel,'/rc_transfer_schedules', :name => 'cancel', :class=>"cancel btn"

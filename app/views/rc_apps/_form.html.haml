@@ -1,0 +1,44 @@
+= simple_form_for @rc_app, :html => {:class=>'form-horizontal', :autocomplete=>"off", :id => "rc_app_form"} do |f|
+  .control-group
+    - if @rc_app.errors.any?
+      #msg-error
+        - @rc_app.errors.full_messages.each do |msg|
+          = msg
+          %br
+  .form-main
+    = f.hidden_field :lock_version
+    = f.hidden_field :approved_id
+    = f.hidden_field :approved_version
+    = f.hidden_field :settings_cnt
+    .control-group
+      = f.label :app_id, "*App ID", :class => 'control-label'
+      = f.text_field :app_id, :readonly => true
+    .control-group
+      = f.label :url, "*URL", :class => 'control-label'
+      = f.text_field :url
+    .control-group
+      = f.label :http_username, "HTTP Username", :class => 'control-label'
+      = f.text_field :http_username
+    .control-group
+      = f.label :http_password, "HTTP Password", :class => 'control-label'
+      = f.password_field :http_password, :required => true, :maxlength => 255, :value => f.object.http_password
+    .control-group
+      - if @rc_app.settings_cnt > 0
+        - (1..@rc_app.settings_cnt).each do |i|
+          = f.label @rc_app.send("setting#{i}_name")
+          = f.send("#{@rc_app["setting#{i}"]["setting#{i}_type"] || 'text'}_field", "setting#{i}_value", value: @rc_app.send("setting#{i}_value"))
+          = f.hidden_field "setting#{i}_name", value: @rc_app.send("setting#{i}_name")
+          = f.hidden_field "setting#{i}_type", value: @rc_app.send("setting#{i}_type")
+          %br
+      = f.hidden_field :settings_cnt, value: @rc_app.settings_cnt
+    .control-group
+      - if @rc_app.udfs_cnt > 0
+        - (1..@rc_app.udfs_cnt).each do |i|
+          = f.hidden_field "udf#{i}_name", value: @rc_app.send("udf#{i}_name")
+          = f.hidden_field "udf#{i}_type", value: @rc_app.send("udf#{i}_type")
+      = f.hidden_field :udfs_cnt, value: @rc_app.udfs_cnt
+
+  .form-actions
+    - (f.object.new_record? and f.object.app_id.nil?) ? label_name = "Create" : label_name = "Update"
+    = f.button "submit" ,:class=>"btn btn-primary", :id => 'submit_rc_app', :value => label_name + ' RC App'
+    = link_to :Cancel,'/rc_apps', :name => 'cancel', :class=>"cancel btn"

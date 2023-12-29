@@ -1,0 +1,28 @@
+%br
+%br
+%h1 Listing RC Apps
+%br
+= "Total Count: #{@rc_apps_count}"
+%br
+= will_paginate @rc_apps, :page_links => true
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      App ID
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      URL
+
+  .tbody
+    - @rc_apps.each do |rc_app|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = link_to 'Show', rc_app
+        %td{:style=>'text-align:left;'}
+          = link_to 'Edit', edit_rc_app_path(rc_app)
+        %td{:style=>'text-align:left;'}
+          = rc_app.app_id
+        %td{:style=>'text-align:left;'}
+          = rc_app.url

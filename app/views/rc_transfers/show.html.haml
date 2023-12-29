@@ -1,0 +1,154 @@
+.show_ticket
+  .header-form-main{:style=>'background-color: #ecf5fa; width: 50%; height: 170px; display: inline-block;'}
+    %h3 
+      Recurring Transfer Code:
+      = link_to @rc_transfer.rc_transfer_code, @rc_transfer.rc_transfer_schedule
+    %h3 
+      Transfer Request Reference:
+      = @rc_transfer.transfer_req_ref
+    %h3 
+      Application Code:
+      = @rc_transfer.rc_app.try(:app_id)
+    %h3 
+      Batch No:
+      = @rc_transfer.batch_no
+    %h3
+      Max. Retries:
+      = @rc_transfer.max_retries
+    %h3
+      Attempt No:
+      = @rc_transfer.attempt_no
+  .header-form-extended{:style=>'background-color: #ecf5fa; width: 50%; height: 170px; display: inline-block;'}
+    %h3
+      Transfer Status:
+      = @rc_transfer.status_code
+      %tr
+        - if @rc_transfer.status_code == "CREDIT FAILED" or @rc_transfer_code == "BALINQ FAILED"
+          = link_to "Fault Text", "#", :class => 'fault-link', :href => "#faultText", :style => "font-weight:100"
+    %h3 
+      Transfer Reply Reference:
+      = @rc_transfer.transfer_rep_ref
+    %h3
+      Started At:
+      = @rc_transfer.started_at.try(:strftime, "%d/%m/%Y %I:%M:%S %p")
+    %h3
+      Audit Logs:
+      = link_to 'Show', {:controller => 'rc_transfers', :action => 'audit_steps', :id => @rc_transfer.id, :step_name => 'ALL'}
+    - if allow_retry(@rc_transfer) == true
+      %br
+      = link_to "Retry", retry_rc_transfer_path(@rc_transfer), class: "btn btn-primary", method: :put
+  .toolbar
+    = render :partial => 'action_toolbar'
+  .header-form-main{:style=>'background-color: #F1F2F8; width: 50%; height: 450px; display: inline-block;'}
+    #ticket-details
+    %h3 Transfer Details:
+    %table.table.no-border{:style=>"table-layout: fixed; width: 100%"}  
+      %tr
+        %td.label Customer ID
+        %td
+          = @rc_transfer.customer_id
+      %tr
+        %td.label Customer Name
+        %td
+          = @rc_transfer.customer_name
+      %tr
+        %td.label Mobile No
+        %td
+          = @rc_transfer.mobile_no
+      %tr
+        %td.label Debit Account No
+        %td
+          = @rc_transfer.debit_account_no
+      %tr
+        %td.label Beneficiary Account No
+        %td
+          = @rc_transfer.bene_account_no
+      %tr
+        %td.label Transferred At
+        %td
+          = @rc_transfer.transferred_at
+      %tr
+        %td.label Transaction Kind
+        %td
+          = @rc_transfer.txn_kind
+      %tr
+        %td.label Broker UUID
+        %td
+          = @rc_transfer.broker_uuid
+      %tr
+        %td.label Transfer Type
+        %td
+          = @rc_transfer.transfer_type
+      %tr
+        %td.label Available Balance
+        %td
+          = @rc_transfer.available_balance
+      %tr
+        %td.label Account Threshold Amount
+        %td
+          = @rc_transfer.acct_threshold_amt
+      %tr
+        %td.label Transfer Amount
+        %td
+          = @rc_transfer.transfer_amount
+      - if @rc_transfer.rc_app.present?
+        - (1..@rc_transfer.rc_app.udfs_cnt).each do |i|
+          - if @rc_transfer.send("udf#{i}_name").present?
+            %tr
+              %td.label
+                = @rc_transfer.send("udf#{i}_name")
+              %td.value
+                = @rc_transfer.send("udf#{i}_value")
+  .header-form-main{:style=>'background-color: #F1F2F8; width: 50%; height: 450px; display: inline-block;'}
+    #ticket-details
+      %h3 Notification Status
+      %table.table.no-border{:style=>"table-layout: fixed; width: 100%"}
+        %tr
+          %td.label Notify Attempt
+          %td
+            - if !@rc_transfer.notify_attempt_no.nil?
+              = link_to @rc_transfer.notify_attempt_no, {:controller => 'rc_transfers', :action => 'audit_steps', :id => @rc_transfer.id, :step_name => 'NOTIFY'}
+            - else
+              = "-"
+        %tr
+          %td.label Notify Attempt At
+          %td= @rc_transfer.notify_attempt_at.try(:strftime, "%d/%m/%Y %I:%M:%S %p")
+        %tr
+          %td.label Notify Status
+          %td= @rc_transfer.notify_status
+        - if @rc_transfer.notify_status == 'NOTIFIED:OK'
+          %tr
+            %td.label Notified At
+            %td= @rc_transfer.notified_at.try(:strftime, "%d/%m/%Y %I:%M:%S %p")
+          
+        - elsif @rc_transfer.notify_status == 'NOTIFICATION FAILED'
+          %tr
+            %td.label Notify Result
+            %td
+              = link_to "Show Result", "#", :class => 'notify-result', :href => "#notifyResult", :style => "font-weight:100"
+#faultText.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+    %h3 Fault Text
+    #error_message{:style => 'color:red'}
+  .modal-body{:style => "max-height:450px;"}
+    .demo-area
+    %pre#fault_text{:style => 'word-wrap: break-word'}
+    %table.table.no-border
+      %tr
+        %td.label Fault Code: 
+        %td= @rc_transfer.fault_code
+      %tr
+        %td.label Fault Code: 
+        %td= @rc_transfer.fault_subcode
+      %tr
+        %td.label Fault Reason:
+        %td= @rc_transfer.fault_reason
+#notifyResult.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+    %h3 Notification Result
+    #error_message{:style => 'color:red'}
+  .modal-body{:style => "max-height:450px;"}
+    %pre#result_text{:style => 'word-wrap: break-word'}
+      = @rc_transfer.notify_result

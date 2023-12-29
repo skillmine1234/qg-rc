@@ -1,0 +1,8 @@
+.control-group
+  - (1..5).each do |i|
+    - if udf.send("udf#{i}_name").present?
+      .control-group
+        = label_tag "rc_transfer_schedule[udf#{i}_value]", udf.send("udf#{i}_name").humanize, class: 'control-label'
+        = send("#{udf["udf#{i}"]["udf#{i}_type"] || 'text'}_field_tag", "rc_transfer_schedule[udf#{i}_value]", udf.try("udf#{i}_value"))
+        = hidden_field_tag "rc_transfer_schedule[udf#{i}_type]", udf.send("udf#{i}_type")
+        = hidden_field_tag "rc_transfer_schedule[udf#{i}_name]", udf.send("udf#{i}_name")

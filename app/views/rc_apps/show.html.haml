@@ -1,0 +1,62 @@
+.form-horizontal.show_form
+  .form-main-with-color{:style=>'background-color: #F1F2F8;'}
+    #form-details
+      %h3 RC App Details 
+      %br
+      %p{:style => 'text-align:left; padding-left:6px; padding-bottom:17px'}
+        - can = can? :edit, @rc_app
+        %a.btn{:href => "#{!(can) ? '#' : '/rc_apps/' + @rc_app.id.to_s + '/edit'}", :role => "button", :class => "btn btn-primary #{(can) ? '' : 'disabled'}"} Edit
+        = render 'approve', :@record => @rc_app
+      %table.table.no-border{:style=>"table-layout: fixed; width: 100%;"}
+        - if !@rc_app.nil?
+          %tr
+            %td.label Version
+            %td.value
+              = link_to "#{audit_count(@rc_app)}", :controller => :rc_apps, :action => :audit_logs, :version_id => audit_count(@rc_app), :id => @rc_app.id
+          %tr
+            %td.label App ID
+            %td.value
+              = @rc_app.app_id
+            %td#msg-error
+              = error_message_for(@rc_app, :app_id, :prepend_text => "")
+          %tr
+            %td.label URL
+            %td.value
+              = @rc_app.url
+            %td#msg-error
+              = error_message_for(@rc_app, :url, :prepend_text => "")
+          %tr
+            %td.label Username
+            %td.value
+              = @rc_app.http_username
+            %td#msg-error
+              = error_message_for(@rc_app, :http_username, :prepend_text => "")
+          %tr
+            %td.label Created At
+            %td.value
+              = @rc_app.created_at.try(:strftime, "%d/%m/%Y %I:%M%p")
+            %td#msg-error
+              = error_message_for(@rc_app, :created_at, :prepend_text => "")
+          %tr
+            %td.label Updated At
+            %td.value
+              = @rc_app.updated_at.try(:strftime, "%d/%m/%Y %I:%M%p")
+            %td#msg-error
+              = error_message_for(@rc_app, :updated_at, :prepend_text => "")
+          %tr
+            - if @rc_app.settings_cnt.present? and @rc_app.settings_cnt > 0
+              %table.table.datatable{style: 'width: 50%'}
+                %thead
+                  %tr
+                    %th Name
+                    %th Value
+                %tbody
+                  - (1..@rc_app.settings_cnt).each do |i|
+                    %tr
+                      %td
+                        = @rc_app.send("setting#{i}_name")
+                      %td
+                        - if @rc_app.send("setting#{i}_type") == 'password' && @rc_app.approval_status == 'A'
+                          = '*****'
+                        - else
+                          = @rc_app.send("setting#{i}_value")

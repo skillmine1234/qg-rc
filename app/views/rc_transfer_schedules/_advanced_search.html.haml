@@ -1,0 +1,12 @@
+= search_form_for @searcher, {defaults: local_assigns[:defaults]} do |f|
+  = f.standard_fields
+  = f.input :is_enabled, as: :enum
+  = f.input :code
+  = f.input :bene_account_no
+  = f.input :debit_account_no
+  = f.input :notify_mobile_no
+  = f.input :next_run_at, as: :between
+  = f.input :last_run_at, as: :between
+  = f.action_buttons
+= "Total Count: #{@records.count}"
+= will_paginate @records, :page_links => true

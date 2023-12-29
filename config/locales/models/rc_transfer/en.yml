@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    models:
+      rc_transfer: "Recurring Transfer"
+    attributes:
+      rc_transfer: &attributes
+        remove_default:  "Remove Defaults"
+        rc_transfer_code:  "Rc Transfer Code"
+        bene_account_no:  "Beneficiary Account No"
+        debit_account_no:  "Debit Account No"
+        transfer_rep_ref:  "Transfer Reply Reference"
+        transfer_amount:  "Transfer Amount"
+        status_code:  "Transfer Status"
+        notify_status:  "Notify Status"
+        mobile_no:  "Mobile No"
+        pending_approval:  "Pending Approval?"
+  activemodel:
+    models:
+      rc_transfer_searcher: 'Recurring Transfer'
+    attributes:
+      rc_transfer_searcher:
+        <<: *attributes

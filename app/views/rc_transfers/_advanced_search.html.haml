@@ -1,0 +1,15 @@
+= search_form_for @searcher, {defaults: local_assigns[:defaults]} do |f|
+  = f.standard_fields
+  = f.input :remove_default, as: :yesno,  boolean_style: :inline
+  = f.input :rc_transfer_code
+  = f.input :bene_account_no
+  = f.input :debit_account_no
+  = f.input :transfer_rep_ref
+  = f.input :transfer_amount, as: :between
+  = f.input :status_code, as: :enum
+  = f.input :notify_status, as: :enum
+  = f.input :mobile_no
+  = f.input :pending_approval
+  = f.action_buttons
+= "Total Count: #{@records.count}"
+= will_paginate @records, :page_links => true

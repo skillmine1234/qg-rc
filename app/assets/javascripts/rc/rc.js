@@ -1,0 +1,1 @@
+//= require rc/rc_transfer_schedule.js

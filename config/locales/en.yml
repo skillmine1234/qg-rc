@@ -1,0 +1,19 @@
+en:
+  menu:
+    rc_app: 'Recurring Transfer App'
+    rc_transfer_schedule: 'Recurring Transfer Schedule'
+    rc_transfer: 'Recurring Transfer'
+  enums:
+    status_code:
+      NEW: 'NEW'
+      FAILED: 'FAILED'
+      'PENDING CREDIT': 'PENDING CREDIT'
+      COMPLETED: 'COMPLETED'
+      CREDIT FAILED: 'CREDIT FAILED'
+      BALINQ FAILED: 'BALINQ FAILED'
+      SENT_TO_BENEFICIARY: 'SENT_TO_BENEFICIARY'
+    notify_status: 
+      PENDING NOTIFICATION: 'PENDING NOTIFICATION'
+      NOTIFIED:REJECTED: 'NOTIFIED:REJECTED'
+      NOTIFIED:OK: 'NOTIFIED:OK'
+      NOTIFICATION FAILED: 'NOTIFICATION FAILED'

@@ -1,0 +1,19 @@
+en:
+  activerecord:
+    models:
+      rc_transfer_schedule: "Recurring Transfer Schedule"
+    attributes:
+      rc_transfer_schedule: &attributes
+        is_enabled:  "Enabled?"
+        code:  "Code"
+        bene_account_no:  "Beneficiary Account No"
+        debit_account_no:  "Debit Account No"
+        notify_mobile_no:  "Notify Mobile No"
+        next_run_at:  "Next Run At"
+        last_run_at:  "Last Run At"
+  activemodel:
+    models:
+      rc_transfer_schedule_searcher: 'Recurring Transfer Schedule'
+    attributes:
+      rc_transfer_schedule_searcher:
+        <<: *attributes

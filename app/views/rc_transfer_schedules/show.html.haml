@@ -1,0 +1,143 @@
+.form-horizontal.show_form
+  .form-main-with-color{:style=>'background-color: #F1F2F8;'}
+    #form-details
+      %h3 Recurring Transfer Schedule Details 
+      %br
+      %p{:style => 'text-align:left; padding-left:6px; padding-bottom:17px'}
+        - can = can? :edit, @rc_transfer_schedule
+        %a.btn{:href => "#{!(can) ? '#' : '/rc_transfer_schedules/' + @rc_transfer_schedule.id.to_s + '/edit'}", :role => "button", :class => "btn btn-primary #{(can) ? '' : 'disabled'}"} Edit
+        = render 'approve', :@record => @rc_transfer_schedule
+      %table.table.no-border{:style=>"table-layout: fixed; width: 100%;"}
+        - if !@rc_transfer_schedule.nil?
+          %tr
+            %td.label Version
+            %td.value
+              = link_to "#{audit_count(@rc_transfer_schedule)}", :controller => :rc_transfer_schedules, :action => :audit_logs, :version_id => audit_count(@rc_transfer_schedule), :id => @rc_transfer_schedule.id
+          %tr
+            %td.label Form Errors
+            %td.value
+              = ' '
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :base, :prepend_text => "")
+          %tr
+            %td.label Enabled?
+            %td.value
+              = @rc_transfer_schedule.is_enabled
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :is_enabled, :prepend_text => "")
+          %tr
+            %td.label Code 
+            %td.value
+              = @rc_transfer_schedule.code
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :code, :prepend_text => "")
+          %tr
+            %td.label Beneficiary Name
+            %td.value
+              = @rc_transfer_schedule.bene_name
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :bene_name, :prepend_text => "")
+          %tr
+            %td.label Beneficiary Account No
+            %td.value
+              = @rc_transfer_schedule.bene_account_no
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :bene_account_no, :prepend_text => "")
+          %tr
+            %td.label Beneficiary IFSC
+            %td.value
+              = @rc_transfer_schedule.bene_account_ifsc
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :bene_account_ifsc, :prepend_text => "")
+          %tr
+            %td.label RC App
+            %td.value
+              = @rc_transfer_schedule.rc_app.try(:app_id)
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :rc_app_id, :prepend_text => "")
+          %tr
+            %td.label Debit Account No
+            %td.value
+              = @rc_transfer_schedule.debit_account_no
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :debit_account_no, :prepend_text => "")
+          %tr
+            %td.label Notify Mobile No
+            %td.value
+              = @rc_transfer_schedule.notify_mobile_no
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :notify_mobile_no, :prepend_text => "")
+          %tr
+            %td.label Next Run At
+            %td.value
+              = @rc_transfer_schedule.next_run_at.try(:strftime, "%d/%m/%Y %I:%M%p")
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :next_run_at, :prepend_text => "")
+          %tr
+            %td.label Last Run At
+            %td.value
+              = @rc_transfer_schedule.last_run_at.try(:strftime, "%d/%m/%Y %I:%M%p")
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :last_run_at, :prepend_text => "")
+          %tr
+            %td.label Last Batch No
+            %td.value
+              = @rc_transfer_schedule.last_batch_no
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :last_batch_no, :prepend_text => "")
+          - if @rc_transfer_schedule.rc_app.present?
+            - (1..@rc_transfer_schedule.rc_app.udfs_cnt).each do |i|
+              - if @rc_transfer_schedule.send("udf#{i}_name").present?
+                %tr
+                  %td.label
+                    = @rc_transfer_schedule.send("udf#{i}_name")
+                  %td.value
+                    = @rc_transfer_schedule.send("udf#{i}_value")
+          %tr
+            %td.label Transaction Kind
+            %td.value
+              = @rc_transfer_schedule.txn_kind
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :txn_kind, :prepend_text => "")
+          %tr
+            %td.label Account Threshold Amount
+            %td.value
+              = @rc_transfer_schedule.acct_threshold_amt
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :acct_threshold_amt, :prepend_text => "")
+          %tr
+            %td.label Schedule Interval (in mins)
+            %td.value
+              = @rc_transfer_schedule.interval_in_mins
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :interval_in_mins, :prepend_text => "")
+          %tr
+            %td.label Max. No. of Retries
+            %td.value
+              = @rc_transfer_schedule.max_retries
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :max_retries, :prepend_text => "")
+          %tr
+            %td.label Retry Interval (in mins)
+            %td.value
+              = @rc_transfer_schedule.retry_in_mins
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :retry_in_mins, :prepend_text => "")
+          %tr
+            %td.label Updated By
+            %td.value
+              = @rc_transfer_schedule.updated_user.try(:username)
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :updated_by, :prepend_text => "")
+          %tr
+            %td.label Created At
+            %td.value
+              = @rc_transfer_schedule.try(:created_at).try(:strftime, "%d/%m/%Y %I:%M%p")
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :created_at, :prepend_text => "")
+          %tr
+            %td.label Updated At
+            %td.value
+              = @rc_transfer_schedule.try(:updated_at).try(:strftime, "%d/%m/%Y %I:%M%p")
+            %td#msg-error
+              = error_message_for(@rc_transfer_schedule, :updated_at, :prepend_text => "")

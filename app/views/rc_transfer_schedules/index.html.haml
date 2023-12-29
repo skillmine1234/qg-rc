@@ -1,0 +1,56 @@
+%br
+= link_to 'New Recurring Transfer Schedule', new_rc_transfer_schedule_path
+%br
+%br
+%h1 Listing Recurring Transfer Schedule
+%br
+= render :partial => 'advanced_search'
+%br
+%br
+%table.table.table-bordered.table-striped.table-hover
+  .thead
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Enabled?
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Code
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Beneficiary Account No
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      RC App
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Debit Account No
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Notify Mobile No
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Last Run At
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Next Run At
+    %th{:style=>'text-align:left; background-color: lightblue;'}
+      Last Batch No
+  .tbody
+    - @records.each do |rc_transfer_schedule|
+      %tr
+        %td{:style=>'text-align:left;'}
+          = link_to 'Show', rc_transfer_schedule
+        %td{:style=>'text-align:left;'}
+          = link_to 'Edit', edit_rc_transfer_schedule_path(rc_transfer_schedule)
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.is_enabled
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.code
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.bene_account_no
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.rc_app.try(:app_id)
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.debit_account_no
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.notify_mobile_no
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.last_run_at.try(:strftime, "%d/%m/%Y %I:%M%p")
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.next_run_at.try(:strftime, "%d/%m/%Y %I:%M%p")
+        %td{:style=>'text-align:left;'}
+          = rc_transfer_schedule.last_batch_no

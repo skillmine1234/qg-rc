@@ -1,0 +1,63 @@
+%br
+%h1 Listing Recurring Transfers
+= render :partial => 'advanced_search'
+%br
+%br
+= simple_form_for :rc_transfer, :url => update_multiple_rc_transfers_path, :html => { :method => :put, :class => 'form-horizontal', :autocomplete=>"off", :id => 'update_transactions', :style=> 'overflow: auto;'} do |f| 
+  %table.table.table-bordered.table-striped.table-hover
+    .thead
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        = check_box_tag(:select_all, value = "1", checked = false, options = {})
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Recurring Transfer Code
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Beneficiary Account No
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Debit Account No
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Mobile No
+      %th{:style=>'text-align:left; background-color: lightblue;'} 
+        Name
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Transfer Amount
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Transferred At
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Transfer Status
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Notification Status
+      %th{:style=>'text-align:left; background-color: lightblue;'}
+        Pending Approval
+
+    .tbody
+      - @records.each do |rc_transfer|
+        %tr
+          %td{:style=>'text-align:left;'}
+            = link_to 'Show', rc_transfer
+          %td{:style=>'text-align:left;'}
+            - if rc_transfer.pending_approval == 'Y' and rc_transfer.notify_status == 'NOTIFICATION FAILED'
+              = check_box_tag "rc_transfer_ids[]", rc_transfer.id, false, class: 'txn_select'
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.rc_transfer_code
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.bene_account_no
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.debit_account_no
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.mobile_no
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.customer_name
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.transfer_amount
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.transferred_at.try(:strftime, "%d/%m/%Y %I:%M:%S %p")
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.status_code
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.notify_status
+          %td{:style=>'text-align:left;'}
+            = rc_transfer.pending_approval
+  .form-actions{:style=>"text-align: center;"}
+    = hidden_field_tag :notify_status
+    = f.button :submit ,:class=>"btn btn-primary rc_transfers_btn", :id => 'submit_rc_transfer', data: {:confirm=>"Are you sure?"}, :value => "Retry Notification"
